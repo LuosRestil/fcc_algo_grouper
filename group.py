@@ -20,11 +20,11 @@ WRITE_SPREADSHEET_ID = os.environ.get('WRITE_SPREADSHEET_ID')
 READ_RANGE_NAME = "'Form Responses 1'!A:H"
 WRITE_RANGE_NAME = "'Sheet1'!A:I"
 
+
 def main():
     # ##############################################################################
     # GOOGLE SHEETS SETUP AND READ INPUT SHEET
     # ##############################################################################
-
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
@@ -73,7 +73,6 @@ def main():
         def __str__(self):
             return f'<Attendee> {self.name}, {self.lang1}, {self.lang2}, {self.lang3}, {self.lang_other}, {self.can_pair}'
 
-
     # INITIAL GROUPING BY LANGUAGE AND LEVEL
     beginners = []
     nonbeginners = []
@@ -96,7 +95,8 @@ def main():
                     elif row[i] == 'not beginner':
                         row[i] = 'nonbeginner'
                 if row not in seen:
-                    attendee = Attendee(name=row[0], level=row[1], algos_completed=row[2], lang1=row[3], lang2=row[4], lang3=row[5], lang_other=row[6])
+                    attendee = Attendee(name=row[0], level=row[1], algos_completed=row[2],
+                                        lang1=row[3], lang2=row[4], lang3=row[5], lang_other=row[6])
                     if attendee.level == 'beginner':
                         beginners.append(attendee)
                     else:
@@ -146,7 +146,8 @@ def main():
     values = []
     for group in final_groups:
         for attendee in group:
-            row = [attendee.name, attendee.level, attendee.algos_completed, attendee.lang1, attendee.lang2, attendee.lang3, attendee.lang_other, attendee.can_pair]
+            row = [attendee.name, attendee.level, attendee.algos_completed, attendee.lang1,
+                   attendee.lang2, attendee.lang3, attendee.lang_other, attendee.can_pair]
             values.append(row)
         values.append(['', '', '', '', '', '', '', ''])
     values.append(['END', 'END', 'END', 'END', 'END', 'END', 'END', 'END'])
@@ -156,7 +157,6 @@ def main():
     result = service.spreadsheets().values().update(
         spreadsheetId=WRITE_SPREADSHEET_ID, range=WRITE_RANGE_NAME,
         valueInputOption='RAW', body=body).execute()
-
 
 
 if __name__ == '__main__':

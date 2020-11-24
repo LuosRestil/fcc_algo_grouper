@@ -1,5 +1,6 @@
 from break_into_subgroups import break_into_subgroups
 
+
 def group_by_level(group):
     initial_groups = {
         'javascript': [],
@@ -36,14 +37,32 @@ def group_by_level(group):
                     print('first attempt at reassignment')
                     next_lang = attendee.lang2
                     if next_lang != 'other':
-                        initial_groups[next_lang].append(attendee)
-                        assigned = True
+                        if len(initial_groups[next_lang]) > 0:
+                            initial_groups[next_lang].append(attendee)
+                            assigned = True
+                            print(f'{attendee.name} reassigned to {next_lang}')
+                    else:
+                        if initial_groups.get(attendee.lang_other, False) and len(initial_groups[attendee.lang_other]) > 0:
+                            initial_groups[attendee.lang_other].append(
+                                attendee)
+                            assigned = True
+                            print(
+                                f'{attendee.name} reassigned to {attendee.lang_other}')
                 elif attempt == 2:
                     print('second attempt at reassignment')
                     next_lang = attendee.lang3
                     if next_lang != 'other':
-                        initial_groups[next_lang].append(attendee)
-                        assigned = True
+                        if len(initial_groups[next_lang]) > 0:
+                            initial_groups[next_lang].append(attendee)
+                            assigned = True
+                            print(f'{attendee.name} reassigned to {next_lang}')
+                    else:
+                        if initial_groups.get(attendee.lang_other, False) and len(initial_groups[attendee.lang_other]) > 0:
+                            initial_groups[attendee.lang_other].append(
+                                attendee)
+                            assigned = True
+                            print(
+                                f'{attendee.name} reassigned to {attendee.lang_other}')
                 elif attempt == 3:
                     attendee.can_pair = False
                     # TODO assign to largest group (currently using javascript as default)
@@ -54,12 +73,13 @@ def group_by_level(group):
                             largest_group_size = len(initial_groups[group])
                             largest_group = group
                     initial_groups[largest_group].append(attendee)
-                    print(f'no home for attendee, setting can_pair to false, adding to {largest_group}')
+                    print(
+                        f'no home for attendee, setting can_pair to false, adding to {largest_group}')
                     assigned = True
                 if assigned:
                     initial_groups[lang] = []
                 attempt += 1
-    
+
     for group in initial_groups:
         if group != 'javascript' and group != 'python' and group != 'c#':
             reassign_singles(group)
@@ -67,18 +87,22 @@ def group_by_level(group):
     reassign_singles('python')
     reassign_singles('javascript')
 
-    inadvertent_loners = []
+    # inadvertent_loners = []
 
     for group, attendees in initial_groups.items():
         if len(attendees) != 0:
             grouped = break_into_subgroups(attendees)
             for group in grouped:
                 final_groups.append(group)
-        if len(attendees) == 1:
-            inadvertent_loners.append([attendees[0]])
+        # if len(attendees) == 1:
+        #     inadvertent_loners.append(attendees[0])
 
-    if len(inadvertent_loners) > 0:
-        final_groups.append(inadvertent_loners)
-    
+    # if len(inadvertent_loners) > 0:
+    #     print('$' * 20)
+    #     print('pushing inadvertent loners')
+    #     for loner in inadvertent_loners:
+    #         print(loner)
+    #     print('$' * 20)
+    #     final_groups.append(inadvertent_loners)
+
     return final_groups
-
